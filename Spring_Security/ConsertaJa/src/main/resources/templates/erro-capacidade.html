@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  lang="pt-br"
+  th:replace="~{layout :: layout(~{::title}, ~{::content})}"
+>
+  <head>
+    <title>Erro - Capacidade do Estoque Excedida</title>
+  </head>
+  <body>
+    <div th:fragment="content">
+      <div class="text-center">
+        <div class="card border-danger mx-auto" style="max-width: 600px">
+          <div class="card-header bg-danger text-white">
+            <h3 class="mb-0">
+              <i class="bi bi-exclamation-triangle-fill me-2"></i>
+              Capacidade do Estoque Excedida
+            </h3>
+          </div>
+          <div class="card-body">
+            <div class="alert alert-danger" role="alert">
+              <h5 class="alert-heading">Operação não permitida!</h5>
+              <p class="mb-3" th:text="${mensagemErro}">
+                Erro na capacidade do estoque.
+              </p>
+              <hr />
+              <div class="row text-start">
+                <div class="col-md-4">
+                  <strong>Local:</strong>
+                  <span th:text="${localEstoque ?: 'Não informado'}"></span>
+                </div>
+                <div class="col-md-4">
+                  <strong>Capacidade:</strong>
+                  <span th:text="${capacidadeTotal ?: 'N/A'}"></span>
+                </div>
+                <div class="col-md-4">
+                  <strong>Já utilizado:</strong>
+                  <span th:text="${capacidadeUsada ?: 'N/A'}"></span>
+                </div>
+              </div>
+              <div class="row text-start mt-2">
+                <div class="col-md-4">
+                  <strong>Tentando adicionar:</strong>
+                  <span th:text="${quantidadeTentativa ?: 'N/A'}"></span>
+                </div>
+                <div class="col-md-8">
+                  <strong>Disponível:</strong>
+                  <span
+                    class="text-success"
+                    th:text="${capacidadeDisponivel ?: 'N/A'}"
+                  ></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-4">
+              <h6 class="text-muted">O que você pode fazer:</h6>
+              <ul class="list-unstyled text-start">
+                <li>
+                  <i class="bi bi-arrow-right text-primary"></i> Reduza a
+                  quantidade da ferramenta
+                </li>
+                <li>
+                  <i class="bi bi-arrow-right text-primary"></i> Escolha um
+                  estoque com mais capacidade
+                </li>
+                <li>
+                  <i class="bi bi-arrow-right text-primary"></i> Remova outras
+                  ferramentas deste estoque
+                </li>
+              </ul>
+            </div>
+
+            <div class="d-flex gap-2 justify-content-center mt-4">
+              <button
+                class="btn btn-primary btn-lg"
+                onclick="history.back()"
+                type="button"
+              >
+                <i class="bi bi-arrow-left me-2"></i>
+                Voltar e Corrigir
+              </button>
+
+              <a
+                class="btn btn-outline-secondary btn-lg"
+                th:href="@{/ferramentas}"
+              >
+                <i class="bi bi-list-ul me-2"></i>
+                Lista de Ferramentas
+              </a>
+
+              <a class="btn btn-outline-info btn-lg" th:href="@{/}">
+                <i class="bi bi-house me-2"></i>
+                Página Inicial
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

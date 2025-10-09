@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  lang="pt-br"
+  th:replace="~{layout :: layout(~{::title}, ~{::content})}"
+>
+  <head>
+    <title
+      th:text="${isEdit} ? 'Editar Fornecedor' : 'Novo Fornecedor'"
+    ></title>
+  </head>
+  <body>
+    <div th:fragment="content">
+      <div
+        class="form-header mb-4 p-4 text-white position-relative overflow-hidden"
+        style="
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          border-radius: 20px;
+        "
+      >
+        <div class="row align-items-center">
+          <div class="col-lg-8">
+            <h2 class="mb-2 fw-bold">
+              <i class="bi bi-person-plus-fill me-3" th:if="${!isEdit}"></i>
+              <i class="bi bi-person-gear me-3" th:if="${isEdit}"></i>
+              <span
+                th:text="${isEdit} ? 'Editar Fornecedor' : 'Novo Fornecedor'"
+              ></span>
+            </h2>
+            <p
+              class="mb-0 opacity-90"
+              th:text="${isEdit} ? 'Atualize as informações do parceiro comercial' : 'Cadastre um novo parceiro comercial no sistema'"
+            ></p>
+          </div>
+          <div class="col-lg-4 text-end">
+            <a class="btn btn-light" th:href="@{/fornecedores}">
+              <i class="bi bi-arrow-left me-2"></i>Voltar
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card form-card border-0 shadow-lg">
+        <div class="card-body p-5">
+          <form
+            th:action="${formAction}"
+            method="post"
+            th:object="${fornecedor}"
+            class="form-modern"
+          >
+            <div class="row g-4">
+              <div class="col-md-12">
+                <div class="form-floating">
+                  <input
+                    class="form-control form-control-modern"
+                    th:field="*{nome}"
+                    id="nome"
+                    placeholder="Nome do fornecedor"
+                  />
+                  <label for="nome">
+                    <i class="bi bi-building me-2"></i>Nome da Empresa
+                  </label>
+                </div>
+                <div
+                  class="form-error"
+                  th:if="${#fields.hasErrors('nome')}"
+                  th:errors="*{nome}"
+                ></div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-floating">
+                  <input
+                    class="form-control form-control-modern"
+                    th:field="*{cnpj}"
+                    id="cnpj"
+                    placeholder="00.000.000/0000-00"
+                    maxlength="18"
+                  />
+                  <label for="cnpj">
+                    <i class="bi bi-credit-card me-2"></i>CNPJ
+                  </label>
+                </div>
+                <div
+                  class="form-error"
+                  th:if="${#fields.hasErrors('cnpj')}"
+                  th:errors="*{cnpj}"
+                ></div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-floating">
+                  <input
+                    type="email"
+                    class="form-control form-control-modern"
+                    th:field="*{email}"
+                    id="email"
+                    placeholder="email@dominio.com"
+                  />
+                  <label for="email">
+                    <i class="bi bi-envelope me-2"></i>Email
+                  </label>
+                </div>
+                <div
+                  class="form-error"
+                  th:if="${#fields.hasErrors('email')}"
+                  th:errors="*{email}"
+                ></div>
+              </div>
+
+              <div class="col-md-12">
+                <div class="form-floating">
+                  <input
+                    type="tel"
+                    class="form-control form-control-modern"
+                    th:field="*{telefone}"
+                    id="telefone"
+                    placeholder="(11) 99999-9999"
+                    maxlength="15"
+                  />
+                  <label for="telefone">
+                    <i class="bi bi-telephone me-2"></i>Telefone
+                  </label>
+                </div>
+                <div
+                  class="form-error"
+                  th:if="${#fields.hasErrors('telefone')}"
+                  th:errors="*{telefone}"
+                ></div>
+              </div>
+
+              <div class="col-12 mt-5">
+                <div class="d-flex gap-3 justify-content-end">
+                  <a
+                    class="btn btn-outline-secondary btn-lg px-4"
+                    th:href="@{/fornecedores}"
+                  >
+                    <i class="bi bi-x-circle me-2"></i>Cancelar
+                  </a>
+                  <button class="btn btn-primary btn-lg px-5" type="submit">
+                    <i class="bi bi-check-circle me-2" th:if="${!isEdit}"></i>
+                    <i class="bi bi-arrow-repeat me-2" th:if="${isEdit}"></i>
+                    <span
+                      th:text="${isEdit} ? 'Atualizar' : 'Cadastrar'"
+                    ></span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div th:if="${erro}" class="alert alert-danger alert-modern mt-4">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        <span th:text="${erro}"></span>
+      </div>
+
+      <style>
+        .form-header {
+          animation: slideInDown 0.6s ease-out;
+        }
+
+        .form-card {
+          border-radius: 20px !important;
+          background: rgba(255, 255, 255, 0.95);
+          backdrop-filter: blur(10px);
+          animation: fadeInUp 0.8s ease-out;
+        }
+
+        .form-modern .form-floating {
+          position: relative;
+          margin-bottom: 1rem;
+        }
+
+        .form-control-modern {
+          border: 2px solid #e9ecef;
+          border-radius: 15px !important;
+          font-size: 1rem;
+          transition: all 0.3s ease;
+          background: rgba(255, 255, 255, 0.9);
+        }
+
+        .form-control-modern:focus {
+          border-color: #667eea;
+          box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.15);
+          background: white;
+          transform: translateY(-2px);
+        }
+
+        .form-floating > label {
+          color: #6c757d;
+          font-weight: 500;
+        }
+
+        .form-floating > .form-control-modern:focus ~ label,
+        .form-floating > .form-control-modern:not(:placeholder-shown) ~ label {
+          color: #667eea;
+          font-weight: 600;
+        }
+
+        .btn-lg {
+          border-radius: 25px;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          transition: all 0.3s ease;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .btn-lg::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, 0.2),
+            transparent
+          );
+          transition: left 0.5s;
+        }
+
+        .btn-lg:hover::before {
+          left: 100%;
+        }
+
+        .btn-lg:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .alert-modern {
+          border-radius: 15px;
+          border: none;
+          background: linear-gradient(135deg, #ff758c, #ff7eb3);
+          color: white;
+          font-weight: 500;
+          animation: slideInUp 0.5s ease-out;
+        }
+
+        @keyframes slideInDown {
+          from {
+            opacity: 0;
+            transform: translateY(-30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes slideInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        /* Form Validation Styles */
+        .form-control-modern.is-invalid {
+          border-color: #dc3545;
+          animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+          0%,
+          100% {
+            transform: translateX(0);
+          }
+          25% {
+            transform: translateX(-5px);
+          }
+          75% {
+            transform: translateX(5px);
+          }
+        }
+
+        /* Input Icons */
+        .form-floating > label i {
+          color: #667eea;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+          .card-body {
+            padding: 2rem !important;
+          }
+
+          .d-flex.gap-3 {
+            flex-direction: column;
+          }
+
+          .btn-lg {
+            width: 100%;
+          }
+        }
+      </style>
+
+      <script>
+        // CNPJ Mask
+        document.getElementById("cnpj").addEventListener("input", function (e) {
+          let value = e.target.value.replace(/\D/g, "");
+          value = value.replace(/(\d{2})(\d)/, "$1.$2");
+          value = value.replace(/(\d{3})(\d)/, "$1.$2");
+          value = value.replace(/(\d{3})(\d)/, "$1/$2");
+          value = value.replace(/(\d{4})(\d{1,2})$/, "$1-$2");
+          e.target.value = value;
+        });
+
+        // Phone Mask
+        document
+          .getElementById("telefone")
+          .addEventListener("input", function (e) {
+            let value = e.target.value.replace(/\D/g, "");
+            value = value.replace(/(\d{2})(\d)/, "($1) $2");
+            value = value.replace(/(\d{5})(\d)/, "$1-$2");
+            e.target.value = value;
+          });
+
+        // Form Animation on Load
+        document.addEventListener("DOMContentLoaded", function () {
+          const inputs = document.querySelectorAll(".form-control-modern");
+          inputs.forEach((input, index) => {
+            input.style.animationDelay = index * 0.1 + "s";
+            input.classList.add("animate__animated", "animate__fadeInUp");
+          });
+        });
+      </script>
+    </div>
+  </body>
+</html>

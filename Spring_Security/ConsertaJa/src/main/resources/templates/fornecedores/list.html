@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  lang="pt-br"
+  th:replace="~{layout :: layout(~{::title}, ~{::content})}"
+>
+  <head>
+    <title>Fornecedores</title>
+  </head>
+  <body>
+    <div th:fragment="content">
+      <div
+        class="header-section mb-4 p-4 text-white position-relative overflow-hidden"
+        style="
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          border-radius: 20px;
+        "
+      >
+        <div class="row align-items-center">
+          <div class="col-lg-8">
+            <h2 class="mb-2 fw-bold">
+              <i class="bi bi-people-fill me-3"></i>Fornecedores
+            </h2>
+            <p class="mb-0 opacity-90">
+              Gerencie seus parceiros comerciais e fornecedores cadastrados
+            </p>
+          </div>
+          <div class="col-lg-4 text-end">
+            <a class="btn btn-light btn-lg" th:href="@{/fornecedores/novo}">
+              <i class="bi bi-person-plus-fill me-2"></i>Novo Fornecedor
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-4" th:if="${#lists.size(fornecedores) > 0}">
+        <div class="col-lg-6 col-xl-4" th:each="f : ${fornecedores}">
+          <div class="fornecedor-card card border-0 h-100 shadow-sm">
+            <div class="card-header bg-transparent border-bottom-0 pt-4 pb-0">
+              <div class="d-flex align-items-center justify-content-between">
+                <div class="icon-wrapper">
+                  <i
+                    class="bi bi-building text-primary"
+                    style="font-size: 2rem"
+                  ></i>
+                </div>
+                <span
+                  class="badge bg-primary px-3 py-2"
+                  th:text="'ID: ' + ${f.id}"
+                ></span>
+              </div>
+            </div>
+            <div class="card-body">
+              <h5
+                class="card-title text-primary fw-bold mb-3"
+                th:text="${f.nome}"
+              ></h5>
+
+              <div class="info-item mb-2">
+                <i class="bi bi-credit-card text-muted me-2"></i>
+                <strong>CNPJ:</strong>
+                <span th:text="${f.cnpj}"></span>
+              </div>
+
+              <div class="info-item mb-2">
+                <i class="bi bi-envelope text-muted me-2"></i>
+                <strong>Email:</strong>
+                <a
+                  th:href="'mailto:' + ${f.email}"
+                  th:text="${f.email}"
+                  class="text-decoration-none"
+                ></a>
+              </div>
+
+              <div class="info-item mb-3">
+                <i class="bi bi-telephone text-muted me-2"></i>
+                <strong>Telefone:</strong>
+                <a
+                  th:href="'tel:' + ${f.telefone}"
+                  th:text="${f.telefone}"
+                  class="text-decoration-none"
+                ></a>
+              </div>
+            </div>
+
+            <div class="card-footer bg-transparent border-top-0 pt-0 pb-4">
+              <div class="d-flex gap-2">
+                <a
+                  class="btn btn-outline-primary flex-fill"
+                  th:href="@{'/fornecedores/' + ${f.id} + '/editar'}"
+                >
+                  <i class="bi bi-pencil-square me-1"></i>Editar
+                </a>
+                <form
+                  th:action="@{'/fornecedores/' + ${f.id} + '/excluir'}"
+                  method="post"
+                  class="flex-fill"
+                >
+                  <button
+                    class="btn btn-outline-danger w-100"
+                    onclick="return confirm('Confirma exclusão do fornecedor?')"
+                  >
+                    <i class="bi bi-trash me-1"></i>Excluir
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div th:if="${#lists.size(fornecedores) == 0}" class="text-center py-5">
+        <div class="empty-state">
+          <i class="bi bi-people text-muted display-1 mb-4"></i>
+          <h3 class="text-muted mb-3">Nenhum fornecedor cadastrado</h3>
+          <p class="text-muted mb-4">
+            Comece cadastrando seu primeiro parceiro comercial
+          </p>
+          <a class="btn btn-primary btn-lg" th:href="@{/fornecedores/novo}">
+            <i class="bi bi-person-plus-fill me-2"></i>Cadastrar Primeiro
+            Fornecedor
+          </a>
+        </div>
+      </div>
+
+      <style>
+        .fornecedor-card {
+          transition: all 0.3s ease;
+          border-radius: 15px !important;
+          overflow: hidden;
+          background: rgba(255, 255, 255, 0.95);
+          backdrop-filter: blur(10px);
+        }
+
+        .fornecedor-card:hover {
+          transform: translateY(-8px);
+          box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15) !important;
+        }
+
+        .icon-wrapper {
+          width: 60px;
+          height: 60px;
+          background: linear-gradient(135deg, #667eea, #764ba2);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.3s ease;
+        }
+
+        .fornecedor-card:hover .icon-wrapper {
+          transform: scale(1.1);
+        }
+
+        .icon-wrapper i {
+          color: white !important;
+        }
+
+        .info-item {
+          font-size: 0.95rem;
+          line-height: 1.6;
+        }
+
+        .info-item strong {
+          color: #495057;
+        }
+
+        .header-section {
+          animation: slideInDown 0.6s ease-out;
+        }
+
+        .fornecedor-card {
+          animation: fadeInUp 0.8s ease-out;
+        }
+
+        .empty-state {
+          animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes slideInDown {
+          from {
+            opacity: 0;
+            transform: translateY(-30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+      </style>
+    </div>
+  </body>
+</html>
