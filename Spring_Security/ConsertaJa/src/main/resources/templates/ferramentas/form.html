@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  lang="pt-br"
+  th:replace="~{layout :: layout(~{::title}, ~{::content})}"
+>
+  <head>
+    <title
+      th:text="${isEdit} ? 'Editar Ferramenta' : 'Nova Ferramenta'"
+    ></title>
+  </head>
+  <body>
+    <div th:fragment="content">
+      <h2 th:text="${isEdit} ? 'Editar Ferramenta' : 'Nova Ferramenta'"></h2>
+      <form
+        th:attr="action=${formAction}"
+        method="post"
+        th:object="${ferramenta}"
+        class="row g-3"
+      >
+        <div class="col-md-6">
+          <label class="form-label">Nome</label>
+          <input
+            class="form-control"
+            th:field="*{nome}"
+            placeholder="Nome da ferramenta"
+          />
+          <div
+            class="form-error"
+            th:if="${#fields.hasErrors('nome')}"
+            th:errors="*{nome}"
+          ></div>
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">Tipo</label>
+          <select class="form-select" th:field="*{tipo}">
+            <option
+              th:each="t : ${tipos}"
+              th:value="${t}"
+              th:text="${t}"
+            ></option>
+          </select>
+          <div
+            class="form-error"
+            th:if="${#fields.hasErrors('tipo')}"
+            th:errors="*{tipo}"
+          ></div>
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">Classificação</label>
+          <select class="form-select" th:field="*{classificacao}">
+            <option
+              th:each="c : ${classificacoes}"
+              th:value="${c}"
+              th:text="${c}"
+            ></option>
+          </select>
+          <div
+            class="form-error"
+            th:if="${#fields.hasErrors('classificacao')}"
+            th:errors="*{classificacao}"
+          ></div>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Tamanho</label>
+          <input
+            class="form-control"
+            th:field="*{tamanho}"
+            placeholder="Ex: 13mm"
+          />
+          <div
+            class="form-error"
+            th:if="${#fields.hasErrors('tamanho')}"
+            th:errors="*{tamanho}"
+          ></div>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Preço</label>
+          <input
+            type="number"
+            step="0.01"
+            class="form-control"
+            th:field="*{preco}"
+            placeholder="0,00"
+          />
+          <div
+            class="form-error"
+            th:if="${#fields.hasErrors('preco')}"
+            th:errors="*{preco}"
+          ></div>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Quantidade</label>
+          <input
+            type="number"
+            class="form-control"
+            th:field="*{quantidade}"
+            placeholder="0"
+          />
+          <div
+            class="form-error"
+            th:if="${#fields.hasErrors('quantidade')}"
+            th:errors="*{quantidade}"
+          ></div>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Fornecedor</label>
+          <select class="form-select" th:field="*{fornecedorId}">
+            <option value="">-- Selecione --</option>
+            <option
+              th:each="f : ${fornecedores}"
+              th:value="${f.id}"
+              th:text="${f.nome}"
+            ></option>
+          </select>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Estoque</label>
+          <select class="form-select" th:field="*{estoqueId}">
+            <option value="">-- Selecione --</option>
+            <option
+              th:each="e : ${estoques}"
+              th:value="${e.id}"
+              th:text="${e.localArmazenamento + ' (cap. ' + e.capacidade + ')'}"
+            ></option>
+          </select>
+        </div>
+
+        <div class="col-12">
+          <button class="btn btn-primary" type="submit">Salvar</button>
+          <a class="btn btn-secondary" th:href="@{/ferramentas}">Cancelar</a>
+        </div>
+      </form>
+      <div
+        th:if="${erro}"
+        class="alert alert-danger mt-3"
+        th:text="${erro}"
+      ></div>
+    </div>
+  </body>
+</html>
