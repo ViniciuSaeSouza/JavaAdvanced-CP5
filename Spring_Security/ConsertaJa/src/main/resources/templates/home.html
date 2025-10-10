@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html
   xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
   lang="pt-br"
   th:replace="~{layout :: layout(~{::title}, ~{::content})}"
 >
   <head>
-    <title>Home</title>
+    <title>Home - ConsertaJá</title>
   </head>
   <body>
     <div th:fragment="content">
+      <!-- Hero Section -->
       <div
         class="hero-section p-4 mb-5 text-white position-relative overflow-hidden"
         style="
@@ -31,10 +33,21 @@
               <h1 class="display-4 fw-bold mb-3 animate-title">
                 🔧 Bem-vindo ao <span class="text-warning">ConsertaJá</span>
               </h1>
-              <p class="fs-5 mb-4 opacity-90">
-                Sua solução completa para gestão inteligente de ferramentas,
-                fornecedores e estoques. Controle total na palma da sua mão!
-              </p>
+
+              <!-- Mensagem personalizada baseada na autenticação -->
+              <div sec:authorize="isAuthenticated()">
+                <p class="fs-5 mb-4 opacity-90">
+                  Olá, <strong sec:authentication="name"></strong>!
+                  Gerencie suas ferramentas e estoques com facilidade.
+                </p>
+              </div>
+              <div sec:authorize="!isAuthenticated()">
+                <p class="fs-5 mb-4 opacity-90">
+                  Sua solução completa para gestão inteligente de ferramentas,
+                  fornecedores e estoques. Controle total na palma da sua mão!
+                </p>
+              </div>
+
               <div class="d-flex flex-wrap gap-2 mb-3">
                 <span class="badge bg-light text-dark px-3 py-2 fs-6">
                   <i class="bi bi-check-circle-fill text-success me-2"></i
@@ -44,448 +57,188 @@
                   <i class="bi bi-check-circle-fill text-success me-2"></i
                   >Controle Total
                 </span>
+                <span class="badge bg-light text-dark px-3 py-2 fs-6"
+                  sec:authorize="isAuthenticated()"
+                >
+                  <i class="bi bi-check-circle-fill text-success me-2"></i
+                  >Sistema Seguro
+                </span>
+              </div>
+
+              <!-- Botões de ação baseados na autenticação -->
+              <div class="d-flex flex-wrap gap-2">
+                <div sec:authorize="!isAuthenticated()">
+                  <a th:href="@{/login}" class="btn btn-warning btn-lg me-2">
+                    <i class="bi bi-box-arrow-in-right me-2"></i>Fazer Login
+                  </a>
+                  <a th:href="@{/signup}" class="btn btn-outline-light btn-lg">
+                    <i class="bi bi-person-plus me-2"></i>Criar Conta
+                  </a>
+                </div>
+                <div sec:authorize="isAuthenticated()">
+                  <a th:href="@{/ferramentas}" class="btn btn-warning btn-lg me-2">
+                    <i class="bi bi-hammer me-2"></i>Ver Ferramentas
+                  </a>
+                  <a th:href="@{/estoques}" class="btn btn-outline-light btn-lg">
+                    <i class="bi bi-boxes me-2"></i>Ver Estoques
+                  </a>
+                </div>
               </div>
             </div>
             <div class="col-lg-4 text-center">
               <div class="hero-icon-container">
-                <i
-                  class="bi bi-gear-fill hero-icon text-warning"
-                  style="font-size: 6rem; animation: rotate 10s linear infinite"
-                ></i>
+                <i class="bi bi-tools display-1 text-warning animate-icon"></i>
               </div>
             </div>
           </div>
         </div>
       </div>
 
+      <!-- Estatísticas -->
       <div class="row g-4 mb-5">
-        <div class="col-lg-4 col-md-6 mb-4">
-          <div
-            class="stat-card card border-0 h-100 animate-card shadow-sm"
-            style="animation-delay: 0.2s"
-          >
-            <div class="card-body text-center p-4 d-flex flex-column">
-              <div
-                class="icon-wrapper mb-3 mx-auto d-flex align-items-center justify-content-center"
-                style="
-                  width: 70px;
-                  height: 70px;
-                  background: linear-gradient(135deg, #667eea, #764ba2);
-                  border-radius: 50%;
-                "
-              >
-                <i class="bi bi-people text-white" style="font-size: 2rem"></i>
+        <div class="col-md-4">
+          <div class="card card-stat h-100 border-0 shadow-lg">
+            <div class="card-body text-center p-4">
+              <div class="stat-icon mb-3">
+                <i class="bi bi-building display-4 text-primary"></i>
               </div>
-              <div
-                class="stat-number display-5 fw-bold text-primary mb-2"
-                th:text="${totalFornecedores}"
-                data-target="${totalFornecedores}"
-              >
+              <h3 class="text-primary fw-bold" th:text="${totalFornecedores}">
                 0
-              </div>
-              <h5 class="card-title text-primary fw-bold mb-2">Fornecedores</h5>
-              <p class="text-muted mb-3 flex-grow-1">
-                Parceiros cadastrados no sistema
-              </p>
-              <a
-                class="btn btn-outline-primary btn-sm mt-auto"
-                th:href="@{/fornecedores}"
-              >
-                <i class="bi bi-eye me-1"></i>Visualizar
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-lg-4 col-md-6 mb-4">
-          <div
-            class="stat-card card border-0 h-100 animate-card shadow-sm"
-            style="animation-delay: 0.4s"
-          >
-            <div class="card-body text-center p-4 d-flex flex-column">
-              <div
-                class="icon-wrapper mb-3 mx-auto d-flex align-items-center justify-content-center"
-                style="
-                  width: 70px;
-                  height: 70px;
-                  background: linear-gradient(135deg, #56ab2f, #a8e6cf);
-                  border-radius: 50%;
-                "
-              >
-                <i class="bi bi-tools text-white" style="font-size: 2rem"></i>
-              </div>
-              <div
-                class="stat-number display-5 fw-bold text-success mb-2"
-                th:text="${totalFerramentas}"
-                data-target="${totalFerramentas}"
-              >
-                0
-              </div>
-              <h5 class="card-title text-success fw-bold mb-2">Ferramentas</h5>
-              <p class="text-muted mb-3 flex-grow-1">
-                Equipamentos disponíveis
-              </p>
-              <a
-                class="btn btn-outline-success btn-sm mt-auto"
-                th:href="@{/ferramentas}"
-              >
-                <i class="bi bi-eye me-1"></i>Visualizar
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-lg-4 col-md-6 mb-4">
-          <div
-            class="stat-card card border-0 h-100 animate-card shadow-sm"
-            style="animation-delay: 0.6s"
-          >
-            <div class="card-body text-center p-4 d-flex flex-column">
-              <div
-                class="icon-wrapper mb-3 mx-auto d-flex align-items-center justify-content-center"
-                style="
-                  width: 70px;
-                  height: 70px;
-                  background: linear-gradient(135deg, #2c3e50, #34495e);
-                  border-radius: 50%;
-                "
-              >
-                <i
-                  class="bi bi-box-seam text-white"
-                  style="font-size: 2rem"
-                ></i>
-              </div>
-              <div
-                class="stat-number display-5 fw-bold text-secondary mb-2"
-                th:text="${totalEstoques}"
-                data-target="${totalEstoques}"
-              >
-                0
-              </div>
-              <h5 class="card-title text-secondary fw-bold mb-2">Estoques</h5>
-              <p class="text-muted mb-3 flex-grow-1">Locais de armazenamento</p>
-              <a
-                class="btn btn-outline-secondary btn-sm mt-auto"
-                th:href="@{/estoques}"
-              >
-                <i class="bi bi-eye me-1"></i>Visualizar
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="row mb-5">
-        <div class="col-12">
-          <div class="card border-0 shadow-sm">
-            <div
-              class="card-header bg-gradient text-white text-center py-3"
-              style="background: linear-gradient(135deg, #2c3e50, #34495e)"
-            >
-              <h3 class="mb-1 fw-bold">
-                <i class="bi bi-lightning-charge-fill me-2"></i>Ações Rápidas
               </h3>
-              <p class="mb-0 opacity-90 fs-6">
-                Acesse rapidamente as principais funcionalidades
-              </p>
+              <p class="text-muted mb-0">Fornecedores Cadastrados</p>
+              <a
+                th:href="@{/fornecedores}"
+                class="btn btn-outline-primary btn-sm mt-2"
+                sec:authorize="hasRole('ADMIN')"
+              >
+                <i class="bi bi-eye me-1"></i>Ver Todos
+              </a>
             </div>
-            <div class="card-body p-4">
-              <div class="row g-4">
-                <div class="col-lg-4 col-md-6 mb-3">
-                  <a
-                    class="btn btn-primary btn-lg w-100 action-btn d-flex flex-column align-items-center justify-content-center p-4"
-                    th:href="@{/fornecedores}"
-                    style="
-                      height: 120px;
-                      border-radius: 15px;
-                      text-decoration: none;
-                    "
-                  >
-                    <i class="bi bi-people mb-2" style="font-size: 2.5rem"></i>
-                    <div
-                      class="fw-bold text-uppercase mb-1"
-                      style="font-size: 0.9rem; letter-spacing: 0.5px"
-                    >
-                      Gerenciar Fornecedores
-                    </div>
-                    <small
-                      class="opacity-75 text-center"
-                      style="font-size: 0.75rem; line-height: 1.2"
-                    >
-                      Cadastre e gerencie seus parceiros
-                    </small>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card card-stat h-100 border-0 shadow-lg">
+            <div class="card-body text-center p-4">
+              <div class="stat-icon mb-3">
+                <i class="bi bi-hammer display-4 text-success"></i>
+              </div>
+              <h3 class="text-success fw-bold" th:text="${totalFerramentas}">
+                0
+              </h3>
+              <p class="text-muted mb-0">Ferramentas Disponíveis</p>
+              <a
+                th:href="@{/ferramentas}"
+                class="btn btn-outline-success btn-sm mt-2"
+                sec:authorize="hasAnyRole('USER', 'ADMIN')"
+              >
+                <i class="bi bi-eye me-1"></i>Ver Todas
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card card-stat h-100 border-0 shadow-lg">
+            <div class="card-body text-center p-4">
+              <div class="stat-icon mb-3">
+                <i class="bi bi-boxes display-4 text-warning"></i>
+              </div>
+              <h3 class="text-warning fw-bold" th:text="${totalEstoques}">
+                0
+              </h3>
+              <p class="text-muted mb-0">Itens em Estoque</p>
+              <a
+                th:href="@{/estoques}"
+                class="btn btn-outline-warning btn-sm mt-2"
+                sec:authorize="hasAnyRole('USER', 'ADMIN')"
+              >
+                <i class="bi bi-eye me-1"></i>Ver Estoques
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recursos do Sistema -->
+      <div class="row g-4">
+        <div class="col-md-6">
+          <div class="card h-100 border-0 shadow-lg">
+            <div class="card-header text-white" style="background: var(--success-gradient);">
+              <h5 class="mb-0">
+                <i class="bi bi-gear-fill me-2"></i>Funcionalidades
+              </h5>
+            </div>
+            <div class="card-body">
+              <ul class="list-unstyled">
+                <li class="mb-2">
+                  <i class="bi bi-check-circle text-success me-2"></i>
+                  Gestão completa de ferramentas
+                </li>
+                <li class="mb-2">
+                  <i class="bi bi-check-circle text-success me-2"></i>
+                  Controle de estoque em tempo real
+                </li>
+                <li class="mb-2" sec:authorize="hasRole('ADMIN')">
+                  <i class="bi bi-check-circle text-success me-2"></i>
+                  Gerenciamento de fornecedores
+                </li>
+                <li class="mb-2" sec:authorize="hasRole('ADMIN')">
+                  <i class="bi bi-check-circle text-success me-2"></i>
+                  Administração de usuários
+                </li>
+                <li class="mb-2">
+                  <i class="bi bi-check-circle text-success me-2"></i>
+                  Sistema de autenticação seguro
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="card h-100 border-0 shadow-lg">
+            <div class="card-header text-white" style="background: var(--info-gradient);">
+              <h5 class="mb-0">
+                <i class="bi bi-info-circle-fill me-2"></i>Acesso Rápido
+              </h5>
+            </div>
+            <div class="card-body">
+              <div sec:authorize="!isAuthenticated()">
+                <p class="text-muted mb-3">Faça login para acessar todas as funcionalidades do sistema.</p>
+                <div class="d-grid gap-2">
+                  <a th:href="@{/login}" class="btn btn-primary">
+                    <i class="bi bi-box-arrow-in-right me-2"></i>Fazer Login
+                  </a>
+                  <a th:href="@{/signup}" class="btn btn-outline-primary">
+                    <i class="bi bi-person-plus me-2"></i>Criar Conta
                   </a>
                 </div>
-                <div class="col-lg-4 col-md-6 mb-3">
-                  <a
-                    class="btn btn-success btn-lg w-100 action-btn d-flex flex-column align-items-center justify-content-center p-4"
-                    th:href="@{/ferramentas}"
-                    style="
-                      height: 120px;
-                      border-radius: 15px;
-                      text-decoration: none;
-                    "
-                  >
-                    <i class="bi bi-tools mb-2" style="font-size: 2.5rem"></i>
-                    <div
-                      class="fw-bold text-uppercase mb-1"
-                      style="font-size: 0.9rem; letter-spacing: 0.5px"
-                    >
-                      Controlar Ferramentas
-                    </div>
-                    <small
-                      class="opacity-75 text-center"
-                      style="font-size: 0.75rem; line-height: 1.2"
-                    >
-                      Organize seu arsenal de equipamentos
-                    </small>
+              </div>
+
+              <div sec:authorize="isAuthenticated()">
+                <p class="text-muted mb-3">Acesse rapidamente as principais funcionalidades:</p>
+                <div class="d-grid gap-2">
+                  <a th:href="@{/ferramentas}" class="btn btn-outline-primary">
+                    <i class="bi bi-hammer me-2"></i>Ferramentas
                   </a>
-                </div>
-                <div class="col-lg-4 col-md-6 mb-3">
-                  <a
-                    class="btn btn-secondary btn-lg w-100 action-btn d-flex flex-column align-items-center justify-content-center p-4"
-                    th:href="@{/estoques}"
-                    style="
-                      height: 120px;
-                      border-radius: 15px;
-                      text-decoration: none;
-                    "
-                  >
-                    <i
-                      class="bi bi-box-seam mb-2"
-                      style="font-size: 2.5rem"
-                    ></i>
-                    <div
-                      class="fw-bold text-uppercase mb-1"
-                      style="font-size: 0.9rem; letter-spacing: 0.5px"
-                    >
-                      Administrar Estoques
-                    </div>
-                    <small
-                      class="opacity-75 text-center"
-                      style="font-size: 0.75rem; line-height: 1.2"
-                    >
-                      Controle locais de armazenamento
-                    </small>
+                  <a th:href="@{/estoques}" class="btn btn-outline-success">
+                    <i class="bi bi-boxes me-2"></i>Estoques
                   </a>
+                  <a th:href="@{/perfil}" class="btn btn-outline-info">
+                    <i class="bi bi-person me-2"></i>Meu Perfil
+                  </a>
+                  <div sec:authorize="hasRole('ADMIN')">
+                    <a th:href="@{/usuarios}" class="btn btn-outline-warning">
+                      <i class="bi bi-people me-2"></i>Gerenciar Usuários
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-
-      <style>
-        @keyframes rotate {
-          from {
-            transform: rotate(0deg);
-          }
-          to {
-            transform: rotate(360deg);
-          }
-        }
-
-        @keyframes float {
-          0%,
-          100% {
-            transform: translateY(0px);
-          }
-          50% {
-            transform: translateY(-20px);
-          }
-        }
-
-        @keyframes slideInFromLeft {
-          from {
-            opacity: 0;
-            transform: translateX(-50px);
-          }
-          to {
-            opacity: 1;
-            transform: translateX(0);
-          }
-        }
-
-        .animate-title {
-          animation: slideInFromLeft 1s ease-out;
-        }
-
-        .animate-card {
-          opacity: 0;
-          transform: translateY(30px);
-          animation: fadeInUp 0.8s ease-out forwards;
-        }
-
-        .stat-card {
-          transition: all 0.3s ease;
-          border-radius: 15px !important;
-        }
-
-        .stat-card:hover {
-          transform: translateY(-8px) scale(1.02);
-          box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12) !important;
-        }
-
-        .action-btn {
-          transition: all 0.3s ease;
-          position: relative;
-          overflow: hidden;
-          font-weight: 500;
-          border: none;
-          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .action-btn:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-          color: white !important;
-        }
-
-        .action-btn:focus {
-          box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25);
-        }
-
-        .action-btn::before {
-          content: "";
-          position: absolute;
-          top: 0;
-          left: -100%;
-          width: 100%;
-          height: 100%;
-          background: linear-gradient(
-            90deg,
-            transparent,
-            rgba(255, 255, 255, 0.2),
-            transparent
-          );
-          transition: left 0.5s;
-        }
-
-        .action-btn:hover::before {
-          left: 100%;
-        }
-
-        .floating-shapes {
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          overflow: hidden;
-        }
-
-        .shape {
-          position: absolute;
-          border-radius: 50%;
-          background: rgba(255, 255, 255, 0.1);
-          animation: float 6s ease-in-out infinite;
-        }
-
-        .shape-1 {
-          width: 100px;
-          height: 100px;
-          top: 20%;
-          right: 20%;
-          animation-delay: 0s;
-        }
-
-        .shape-2 {
-          width: 150px;
-          height: 150px;
-          top: 60%;
-          right: 60%;
-          animation-delay: 2s;
-        }
-
-        .shape-3 {
-          width: 80px;
-          height: 80px;
-          top: 80%;
-          right: 30%;
-          animation-delay: 4s;
-        }
-
-        .icon-wrapper {
-          transition: all 0.3s ease;
-        }
-
-        .stat-card:hover .icon-wrapper {
-          transform: scale(1.1);
-        }
-
-        .hero-section {
-          position: relative;
-          overflow: hidden;
-        }
-
-        .hero-icon-container {
-          animation: float 3s ease-in-out infinite;
-        }
-
-        @media (max-width: 768px) {
-          .hero-section {
-            padding: 2rem 1rem !important;
-          }
-
-          .hero-section h1 {
-            font-size: 2.5rem !important;
-          }
-
-          .hero-section p {
-            font-size: 1.1rem !important;
-          }
-
-          .hero-icon {
-            font-size: 4rem !important;
-          }
-
-          .stat-card .card-body {
-            padding: 1.5rem !important;
-          }
-
-          .action-btn {
-            height: 100px !important;
-            padding: 1rem !important;
-          }
-
-          .action-btn i {
-            font-size: 2rem !important;
-          }
-
-          .action-btn div {
-            font-size: 0.8rem !important;
-          }
-
-          .action-btn small {
-            font-size: 0.7rem !important;
-          }
-        }
-
-        @media (max-width: 576px) {
-          .hero-section h1 {
-            font-size: 2rem !important;
-          }
-
-          .hero-section p {
-            font-size: 1rem !important;
-          }
-
-          .action-btn {
-            height: 90px !important;
-            padding: 0.75rem !important;
-          }
-
-          .action-btn i {
-            font-size: 1.8rem !important;
-          }
-
-          .action-btn div {
-            font-size: 0.75rem !important;
-          }
-
-          .action-btn small {
-            font-size: 0.65rem !important;
-          }
-        }
-      </style>
     </div>
   </body>
 </html>
