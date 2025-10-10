@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{layout :: layout(~{::title}, ~{::body})}">
+<head>
+    <title>Acesso Negado - ConsertaJá</title>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow-lg border-0 text-center">
+                    <div class="card-header py-4" style="background: var(--danger-gradient);">
+                        <h1 class="text-white mb-0">
+                            <i class="bi bi-shield-x display-4"></i>
+                        </h1>
+                        <h3 class="text-white mt-2">Acesso Negado</h3>
+                    </div>
+                    <div class="card-body p-5">
+                        <h4 class="text-danger mb-3">Erro 403</h4>
+                        <p class="lead text-muted">
+                            Você não tem permissão para acessar esta página.
+                        </p>
+                        <p class="text-muted">
+                            Esta área é restrita a usuários com privilégios específicos.
+                            Entre em contato com o administrador se acredita que deveria ter acesso.
+                        </p>
+
+                        <div class="mt-4">
+                            <a th:href="@{/home}" class="btn btn-primary me-2">
+                                <i class="bi bi-house me-1"></i>Voltar ao Início
+                            </a>
+                            <a th:href="@{/perfil}" class="btn btn-outline-secondary" sec:authorize="isAuthenticated()">
+                                <i class="bi bi-person me-1"></i>Meu Perfil
+                            </a>
+                        </div>
+
+                        <div class="mt-4" sec:authorize="!isAuthenticated()">
+                            <p class="text-muted mb-2">Precisa fazer login?</p>
+                            <a th:href="@{/login}" class="btn btn-outline-primary">
+                                <i class="bi bi-box-arrow-in-right me-1"></i>Fazer Login
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

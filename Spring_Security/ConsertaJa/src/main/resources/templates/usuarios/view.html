@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{layout :: layout(~{::title}, ~{::body})}">
+<head>
+    <title>Visualizar Usuário - ConsertaJá</title>
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <div class="card shadow-lg border-0">
+                    <div class="card-header text-center py-4" style="background: var(--info-gradient);">
+                        <h3 class="text-white mb-0">
+                            <i class="bi bi-person-circle me-2"></i>Detalhes do Usuário
+                        </h3>
+                    </div>
+                    <div class="card-body p-4">
+                        <!-- Mensagens de sucesso/erro -->
+                        <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+                            <i class="bi bi-check-circle me-2"></i>
+                            <span th:text="${success}"></span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+
+                        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="bi bi-exclamation-circle me-2"></i>
+                            <span th:text="${error}"></span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+
+                        <!-- Informações do Usuário -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">
+                                        <i class="bi bi-hash me-1"></i>ID
+                                    </label>
+                                    <p class="form-control-static border p-2 rounded bg-light" th:text="${usuario.id}"></p>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">
+                                        <i class="bi bi-person me-1"></i>Nome de Usuário
+                                    </label>
+                                    <p class="form-control-static border p-2 rounded bg-light" th:text="${usuario.username}"></p>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">
+                                        <i class="bi bi-envelope me-1"></i>Email
+                                    </label>
+                                    <p class="form-control-static border p-2 rounded bg-light" th:text="${usuario.email}"></p>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">
+                                        <i class="bi bi-person-badge me-1"></i>Nome Completo
+                                    </label>
+                                    <p class="form-control-static border p-2 rounded bg-light" th:text="${usuario.nomeCompleto}"></p>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">
+                                        <i class="bi bi-telephone me-1"></i>Telefone
+                                    </label>
+                                    <p class="form-control-static border p-2 rounded bg-light"
+                                       th:text="${usuario.telefone != null && !usuario.telefone.isEmpty()} ? ${usuario.telefone} : 'Não informado'"></p>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">
+                                        <i class="bi bi-calendar me-1"></i>Data de Cadastro
+                                    </label>
+                                    <p class="form-control-static border p-2 rounded bg-light"
+                                       th:text="${#temporals.format(usuario.dataCriacao, 'dd/MM/yyyy HH:mm')}"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">
+                                        <i class="bi bi-toggle-on me-1"></i>Status
+                                    </label>
+                                    <div class="border p-2 rounded bg-light">
+                                        <span th:if="${usuario.enabled}" class="badge bg-success">
+                                            <i class="bi bi-check-circle me-1"></i>Ativo
+                                        </span>
+                                        <span th:unless="${usuario.enabled}" class="badge bg-danger">
+                                            <i class="bi bi-x-circle me-1"></i>Inativo
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">
+                                        <i class="bi bi-shield-check me-1"></i>Roles
+                                    </label>
+                                    <div class="border p-2 rounded bg-light">
+                                        <span th:each="role : ${usuario.roles}"
+                                              class="badge bg-primary me-1" th:text="${role}"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Gerenciamento de Roles -->
+                        <div class="card mt-4">
+                            <div class="card-header">
+                                <h6 class="mb-0">
+                                    <i class="bi bi-shield-gear me-2"></i>Gerenciar Roles
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <form th:action="@{/usuarios/{id}/add-role(id=${usuario.id})}" method="post" class="d-flex gap-2">
+                                            <select name="roleName" class="form-select">
+                                                <option value="USER">USER</option>
+                                                <option value="ADMIN">ADMIN</option>
+                                            </select>
+                                            <button type="submit" class="btn btn-success btn-sm">
+                                                <i class="bi bi-plus"></i> Adicionar
+                                            </button>
+                                        </form>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <form th:action="@{/usuarios/{id}/remove-role(id=${usuario.id})}" method="post" class="d-flex gap-2">
+                                            <select name="roleName" class="form-select">
+                                                <option th:each="role : ${usuario.roles}" th:value="${role}" th:text="${role}"></option>
+                                            </select>
+                                            <button type="submit" class="btn btn-danger btn-sm">
+                                                <i class="bi bi-dash"></i> Remover
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Botões de Ação -->
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                            <a th:href="@{/usuarios/{id}/editar(id=${usuario.id})}" class="btn btn-warning">
+                                <i class="bi bi-pencil me-2"></i>Editar Usuário
+                            </a>
+                            <a th:href="@{/usuarios}" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left me-2"></i>Voltar à Lista
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

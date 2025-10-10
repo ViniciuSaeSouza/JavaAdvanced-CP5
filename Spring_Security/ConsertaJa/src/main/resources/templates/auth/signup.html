@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::title}, ~{::body})}">
+<head>
+    <title>Cadastro - ConsertaJá</title>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card shadow-lg border-0">
+                    <div class="card-header text-center py-4" style="background: var(--success-gradient);">
+                        <h3 class="text-white mb-0">
+                            <i class="bi bi-person-plus me-2"></i>Criar Conta
+                        </h3>
+                    </div>
+                    <div class="card-body p-4">
+                        <!-- Formulário de Cadastro -->
+                        <form th:action="@{/signup}" method="post" th:object="${usuario}">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="username" class="form-label">
+                                        <i class="bi bi-person me-1"></i>Nome de Usuário *
+                                    </label>
+                                    <input type="text" class="form-control" id="username" th:field="*{username}"
+                                           th:class="${#fields.hasErrors('username')} ? 'form-control is-invalid' : 'form-control'"
+                                           placeholder="Ex: joao123">
+                                    <div th:if="${#fields.hasErrors('username')}" class="invalid-feedback">
+                                        <span th:errors="*{username}"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="email" class="form-label">
+                                        <i class="bi bi-envelope me-1"></i>Email *
+                                    </label>
+                                    <input type="email" class="form-control" id="email" th:field="*{email}"
+                                           th:class="${#fields.hasErrors('email')} ? 'form-control is-invalid' : 'form-control'"
+                                           placeholder="Ex: joao@email.com">
+                                    <div th:if="${#fields.hasErrors('email')}" class="invalid-feedback">
+                                        <span th:errors="*{email}"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="nomeCompleto" class="form-label">
+                                    <i class="bi bi-person-badge me-1"></i>Nome Completo *
+                                </label>
+                                <input type="text" class="form-control" id="nomeCompleto" th:field="*{nomeCompleto}"
+                                       th:class="${#fields.hasErrors('nomeCompleto')} ? 'form-control is-invalid' : 'form-control'"
+                                       placeholder="Ex: João da Silva">
+                                <div th:if="${#fields.hasErrors('nomeCompleto')}" class="invalid-feedback">
+                                    <span th:errors="*{nomeCompleto}"></span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="password" class="form-label">
+                                        <i class="bi bi-lock me-1"></i>Senha *
+                                    </label>
+                                    <input type="password" class="form-control" id="password" th:field="*{password}"
+                                           th:class="${#fields.hasErrors('password')} ? 'form-control is-invalid' : 'form-control'"
+                                           placeholder="Mínimo 6 caracteres">
+                                    <div th:if="${#fields.hasErrors('password')}" class="invalid-feedback">
+                                        <span th:errors="*{password}"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="telefone" class="form-label">
+                                        <i class="bi bi-telephone me-1"></i>Telefone
+                                    </label>
+                                    <input type="tel" class="form-control" id="telefone" th:field="*{telefone}"
+                                           placeholder="(11) 99999-9999">
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-success btn-lg"
+                                        style="background: var(--success-gradient); border: none;">
+                                    <i class="bi bi-person-plus me-2"></i>Criar Conta
+                                </button>
+
+                                <a th:href="@{/login}" class="btn btn-outline-secondary">
+                                    <i class="bi bi-arrow-left me-2"></i>Voltar ao Login
+                                </a>
+                            </div>
+                        </form>
+
+                        <div class="text-center mt-3">
+                            <small class="text-muted">
+                                <i class="bi bi-info-circle me-1"></i>
+                                Campos marcados com * são obrigatórios
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
