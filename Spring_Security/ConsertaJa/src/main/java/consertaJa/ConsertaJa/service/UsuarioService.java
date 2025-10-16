@@ -8,12 +8,15 @@ import consertaJa.ConsertaJa.model.Usuario;
 import consertaJa.ConsertaJa.repository.RoleRepository;
 import consertaJa.ConsertaJa.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.SecureRandom;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -131,6 +134,93 @@ public class UsuarioService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         return buscarPorUsername(username);
+    }
+
+    // Métodos para AdminController
+    public Page<UsuarioResponseDto> listarTodos(Pageable pageable) {
+        return usuarioRepository.findAll(pageable)
+                .map(this::convertToResponseDto);
+    }
+
+    public Page<UsuarioResponseDto> buscarUsuarios(String search, Pageable pageable) {
+        return usuarioRepository.findByUsernameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrNomeCompletoContainingIgnoreCase(
+                search, search, search, pageable)
+                .map(this::convertToResponseDto);
+    }
+
+    public long contarTotalUsuarios() {
+        return usuarioRepository.count();
+    }
+
+    public long contarUsuariosPorRole(String roleName) {
+        return usuarioRepository.countByRoles_Nome(roleName);
+    }
+
+    public UsuarioResponseDto criarUsuario(UsuarioRequestDto dto) {
+        if (usuarioRepository.existsByUsername(dto.getUsername())) {
+            throw new RuntimeException("Nome de usuário já existe");
+        }
+
+        if (usuarioRepository.existsByEmail(dto.getEmail())) {
+            throw new RuntimeException("Email já está em uso");
+        }
+
+        Usuario usuario = new Usuario();
+        usuario.setUsername(dto.getUsername());
+        usuario.setPassword(passwordEncoder.encode(dto.getPassword()));
+        usuario.setEmail(dto.getEmail());
+        usuario.setNomeCompleto(dto.getNomeCompleto());
+        usuario.setTelefone(dto.getTelefone());
+        usuario.setEnabled(dto.isEnabled());
+
+        // Adicionar roles se especificadas
+        if (dto.getRoles() != null && !dto.getRoles().isEmpty()) {
+            for (String roleName : dto.getRoles()) {
+                Role role = roleRepository.findByNome(roleName)
+                        .orElseThrow(() -> new RuntimeException("Role não encontrada: " + roleName));
+                usuario.getRoles().add(role);
+            }
+        } else {
+            // Atribui role USER por padrão
+            Role userRole = roleRepository.findByNome("USER")
+                    .orElseThrow(() -> new RuntimeException("Role USER não encontrada"));
+            usuario.getRoles().add(userRole);
+        }
+
+        Usuario usuarioSalvo = usuarioRepository.save(usuario);
+        return convertToResponseDto(usuarioSalvo);
+    }
+
+    public void alternarStatusUsuario(Long id) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new IdNaoEncontradoException("Usuário não encontrado"));
+        
+        usuario.setEnabled(!usuario.isEnabled());
+        usuarioRepository.save(usuario);
+    }
+
+    public String resetarSenha(Long id) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new IdNaoEncontradoException("Usuário não encontrado"));
+        
+        String novaSenha = gerarSenhaAleatoria();
+        usuario.setPassword(passwordEncoder.encode(novaSenha));
+        usuarioRepository.save(usuario);
+        
+        return novaSenha;
+    }
+
+    private String gerarSenhaAleatoria() {
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        SecureRandom random = new SecureRandom();
+        StringBuilder sb = new StringBuilder();
+        
+        for (int i = 0; i < 8; i++) {
+            int randomIndex = random.nextInt(chars.length());
+            sb.append(chars.charAt(randomIndex));
+        }
+        
+        return sb.toString();
     }
 
     private UsuarioResponseDto convertToResponseDto(Usuario usuario) {

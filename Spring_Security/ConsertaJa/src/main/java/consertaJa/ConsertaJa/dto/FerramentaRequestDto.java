@@ -27,7 +27,7 @@ public record FerramentaRequestDto(
         @NotNull(message = "A quantidade da ferramenta não pode estar vazia")
         int quantidade,
 
-        Long fornecedorId,
+        String fornecedorId,
 
-        Long estoqueId
+        String estoqueId
 ) {}

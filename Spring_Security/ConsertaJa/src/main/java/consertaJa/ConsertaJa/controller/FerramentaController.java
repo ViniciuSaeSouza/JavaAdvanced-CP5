@@ -54,7 +54,11 @@ public class FerramentaController {
                          BindingResult bindingResult,
                          RedirectAttributes ra,
                          Model model) {
+        System.out.println("=== MÉTODO POST CHAMADO ===");
+        System.out.println("Dados recebidos: " + dto);
+        
         if (bindingResult.hasErrors()) {
+            System.out.println("Erros de validação: " + bindingResult.getAllErrors());
             model.addAttribute("fornecedores", fornecedorService.listAll());
             model.addAttribute("estoques", estoqueService.findAll());
             model.addAttribute("tipos", Tipo.values());
@@ -68,6 +72,7 @@ public class FerramentaController {
             ra.addFlashAttribute("mensagem", "Ferramenta cadastrada com sucesso!");
             return "redirect:/ferramentas";
         } catch (IdNaoEncontradoException e) {
+            System.out.println("Erro IdNaoEncontradoException: " + e.getMessage());
             model.addAttribute("erro", e.getMessage());
             model.addAttribute("fornecedores", fornecedorService.listAll());
             model.addAttribute("estoques", estoqueService.findAll());
@@ -77,6 +82,8 @@ public class FerramentaController {
             model.addAttribute("isEdit", false);
             return "ferramentas/form";
         } catch (Exception e) {
+            System.out.println("Erro geral: " + e.getMessage());
+            e.printStackTrace();
             if (e.getMessage() != null && e.getMessage().contains("Ultrapassou a capacidade do estoque")) {
                 return handleCapacidadeError(e.getMessage(), model);
             }

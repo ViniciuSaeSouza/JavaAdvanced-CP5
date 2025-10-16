@@ -29,7 +29,7 @@ public class FornecedorController {
 
     @GetMapping("/novo")
     public String novoForm(Model model) {
-        model.addAttribute("fornecedor", new FornecedorRequestDto("", "", "", ""));
+        model.addAttribute("fornecedor", new FornecedorRequestDto("", "", "", "", ""));
         model.addAttribute("formAction", "/fornecedores");
         model.addAttribute("isEdit", false);
         return "fornecedores/form";

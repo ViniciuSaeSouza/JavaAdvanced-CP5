@@ -80,6 +80,7 @@ public class FornecedorService {
 
         f.setNome(dto.nome());
         f.setEmail(dto.email());
+        f.setEndereco(dto.endereco());
 
         if (dto.cnpj() != null) {
             f.setCnpj(FormatUtils.formatCnpj(dto.cnpj()));

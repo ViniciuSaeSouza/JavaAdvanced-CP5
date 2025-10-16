@@ -40,19 +40,35 @@ public class DataInitializer implements CommandLineRunner {
     }
 
     private void initializeAdminUser() {
-        if (!usuarioRepository.existsByUsername("admin")) {
+        if (!usuarioRepository.existsByEmail("concertaja@gmail.com")) {
             Usuario admin = new Usuario();
-            admin.setUsername("admin");
-            admin.setPassword(passwordEncoder.encode("admin123"));
-            admin.setEmail("admin@consertaja.com");
-            admin.setNomeCompleto("Administrador");
+            admin.setUsername("admin_consertaja");
+            admin.setPassword(passwordEncoder.encode("ConsertaJa@2025"));
+            admin.setEmail("concertaja@gmail.com");
+            admin.setNomeCompleto("Administrador ConsertaJa");
             admin.setTelefone("(11) 99999-9999");
 
             Role adminRole = roleRepository.findByNome("ADMIN").orElseThrow();
             admin.getRoles().add(adminRole);
 
             usuarioRepository.save(admin);
-            log.info("Usuário admin criado com senha: admin123");
+            log.info("Usuário admin criado - Email: concertaja@gmail.com");
+        }
+        
+        // Criar usuário normal de exemplo
+        if (!usuarioRepository.existsByUsername("usuario_normal")) {
+            Usuario user = new Usuario();
+            user.setUsername("usuario_normal");
+            user.setPassword(passwordEncoder.encode("user123"));
+            user.setEmail("usuario@exemplo.com");
+            user.setNomeCompleto("Usuário Normal");
+            user.setTelefone("(11) 88888-8888");
+
+            Role userRole = roleRepository.findByNome("USER").orElseThrow();
+            user.getRoles().add(userRole);
+
+            usuarioRepository.save(user);
+            log.info("Usuário normal criado - Username: usuario_normal, Senha: user123");
         }
     }
 }

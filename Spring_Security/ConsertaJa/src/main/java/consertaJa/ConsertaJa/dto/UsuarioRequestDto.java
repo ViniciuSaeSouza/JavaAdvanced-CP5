@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Set;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,7 +18,6 @@ public class UsuarioRequestDto {
     @Size(min = 3, max = 50, message = "Nome de usuário deve ter entre 3 e 50 caracteres")
     private String username;
 
-    @NotBlank(message = "Senha é obrigatória")
     @Size(min = 6, message = "Senha deve ter pelo menos 6 caracteres")
     private String password;
 
@@ -28,4 +29,11 @@ public class UsuarioRequestDto {
     private String nomeCompleto;
 
     private String telefone;
+
+    private boolean enabled = true;
+
+    private Set<String> roles;
+
+    // Confirmação de senha para validação no frontend
+    private String confirmPassword;
 }

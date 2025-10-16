@@ -18,6 +18,9 @@ public record FornecedorRequestDto(
         String email,
 
         @Telefone
-        String telefone
+        String telefone,
+
+        @NotBlank(message = "O endereço não pode estar vazio")
+        String endereco
 ) {
 }

@@ -35,13 +35,15 @@ public class FerramentaService {
         Fornecedor fornecedor = null;
         Estoque estoque = null;
 
-        if (dto.fornecedorId() != null) {
-            fornecedor = fornecedorRepository.findById(dto.fornecedorId())
+        if (dto.fornecedorId() != null && !dto.fornecedorId().isEmpty()) {
+            Long fornecedorId = Long.parseLong(dto.fornecedorId());
+            fornecedor = fornecedorRepository.findById(fornecedorId)
                     .orElseThrow(() -> new IdNaoEncontradoException("Fornecedor não encontrado"));
         }
 
-        if (dto.estoqueId() != null) {
-            estoque = estoqueRepository.findById(dto.estoqueId())
+        if (dto.estoqueId() != null && !dto.estoqueId().isEmpty()) {
+            Long estoqueId = Long.parseLong(dto.estoqueId());
+            estoque = estoqueRepository.findById(estoqueId)
                     .orElseThrow(() -> new IdNaoEncontradoException("Estoque não encontrado"));
 
             int used = repository.findByEstoqueId(estoque.getId())

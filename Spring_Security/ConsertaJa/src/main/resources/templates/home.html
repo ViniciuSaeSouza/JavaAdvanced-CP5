@@ -37,8 +37,8 @@
               <!-- Mensagem personalizada baseada na autenticação -->
               <div sec:authorize="isAuthenticated()">
                 <p class="fs-5 mb-4 opacity-90">
-                  Olá, <strong sec:authentication="name"></strong>!
-                  Gerencie suas ferramentas e estoques com facilidade.
+                  Olá, <strong sec:authentication="name"></strong>! Gerencie
+                  suas ferramentas e estoques com facilidade.
                 </p>
               </div>
               <div sec:authorize="!isAuthenticated()">
@@ -57,7 +57,8 @@
                   <i class="bi bi-check-circle-fill text-success me-2"></i
                   >Controle Total
                 </span>
-                <span class="badge bg-light text-dark px-3 py-2 fs-6"
+                <span
+                  class="badge bg-light text-dark px-3 py-2 fs-6"
                   sec:authorize="isAuthenticated()"
                 >
                   <i class="bi bi-check-circle-fill text-success me-2"></i
@@ -76,10 +77,16 @@
                   </a>
                 </div>
                 <div sec:authorize="isAuthenticated()">
-                  <a th:href="@{/ferramentas}" class="btn btn-warning btn-lg me-2">
+                  <a
+                    th:href="@{/ferramentas}"
+                    class="btn btn-warning btn-lg me-2"
+                  >
                     <i class="bi bi-hammer me-2"></i>Ver Ferramentas
                   </a>
-                  <a th:href="@{/estoques}" class="btn btn-outline-light btn-lg">
+                  <a
+                    th:href="@{/estoques}"
+                    class="btn btn-outline-light btn-lg"
+                  >
                     <i class="bi bi-boxes me-2"></i>Ver Estoques
                   </a>
                 </div>
@@ -109,9 +116,9 @@
               <a
                 th:href="@{/fornecedores}"
                 class="btn btn-outline-primary btn-sm mt-2"
-                sec:authorize="hasRole('ADMIN')"
+                sec:authorize="hasAnyRole('USER', 'ADMIN')"
               >
-                <i class="bi bi-eye me-1"></i>Ver Todos
+                <i class="bi bi-eye me-1"></i>Ver Fornecedores
               </a>
             </div>
           </div>
@@ -144,9 +151,7 @@
               <div class="stat-icon mb-3">
                 <i class="bi bi-boxes display-4 text-warning"></i>
               </div>
-              <h3 class="text-warning fw-bold" th:text="${totalEstoques}">
-                0
-              </h3>
+              <h3 class="text-warning fw-bold" th:text="${totalEstoques}">0</h3>
               <p class="text-muted mb-0">Itens em Estoque</p>
               <a
                 th:href="@{/estoques}"
@@ -164,7 +169,10 @@
       <div class="row g-4">
         <div class="col-md-6">
           <div class="card h-100 border-0 shadow-lg">
-            <div class="card-header text-white" style="background: var(--success-gradient);">
+            <div
+              class="card-header text-white"
+              style="background: var(--success-gradient)"
+            >
               <h5 class="mb-0">
                 <i class="bi bi-gear-fill me-2"></i>Funcionalidades
               </h5>
@@ -198,14 +206,19 @@
 
         <div class="col-md-6">
           <div class="card h-100 border-0 shadow-lg">
-            <div class="card-header text-white" style="background: var(--info-gradient);">
+            <div
+              class="card-header text-white"
+              style="background: var(--info-gradient)"
+            >
               <h5 class="mb-0">
                 <i class="bi bi-info-circle-fill me-2"></i>Acesso Rápido
               </h5>
             </div>
             <div class="card-body">
               <div sec:authorize="!isAuthenticated()">
-                <p class="text-muted mb-3">Faça login para acessar todas as funcionalidades do sistema.</p>
+                <p class="text-muted mb-3">
+                  Faça login para acessar todas as funcionalidades do sistema.
+                </p>
                 <div class="d-grid gap-2">
                   <a th:href="@{/login}" class="btn btn-primary">
                     <i class="bi bi-box-arrow-in-right me-2"></i>Fazer Login
@@ -217,7 +230,9 @@
               </div>
 
               <div sec:authorize="isAuthenticated()">
-                <p class="text-muted mb-3">Acesse rapidamente as principais funcionalidades:</p>
+                <p class="text-muted mb-3">
+                  Acesse rapidamente as principais funcionalidades:
+                </p>
                 <div class="d-grid gap-2">
                   <a th:href="@{/ferramentas}" class="btn btn-outline-primary">
                     <i class="bi bi-hammer me-2"></i>Ferramentas

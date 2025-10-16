@@ -13,6 +13,7 @@ public record FornecedorResponseDto(
         String cnpj,
         String email,
         String telefone,
+        String endereco,
         List<Ferramenta> ferramentas
 ) {
     public FornecedorResponseDto(Fornecedor f){
@@ -22,6 +23,7 @@ public record FornecedorResponseDto(
                 f.getCnpj(),
                 f.getEmail(),
                 f.getTelefone(),
+                f.getEndereco(),
                 Optional.ofNullable(f.getFerramentas())
                         .orElseGet(List::of)
         );

@@ -27,13 +27,6 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder());
-        return authProvider;
-    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
@@ -44,17 +37,26 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/", "/home", "/sobre", "/login", "/signup", "/css/**", "/js/**", "/images/**").permitAll()
+                .requestMatchers("/", "/home", "/sobre", "/login", "/signup", "/css/**", "/js/**", "/images/**", "/error/**").permitAll()
                 .requestMatchers("/admin/**", "/usuarios/**").hasRole("ADMIN")
-                .requestMatchers("/fornecedores/**").hasRole("ADMIN")
-                .requestMatchers("/ferramentas/**", "/estoques/**").hasAnyRole("USER", "ADMIN")
+                .requestMatchers("/fornecedores/**", "/ferramentas/**", "/estoques/**").hasAnyRole("USER", "ADMIN")
                 .requestMatchers("/perfil/**").authenticated()
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
                 .loginPage("/login")
                 .loginProcessingUrl("/login")
-                .defaultSuccessUrl("/home", true)
+                .usernameParameter("email")
+                .successHandler((request, response, authentication) -> {
+                    boolean isAdmin = authentication.getAuthorities().stream()
+                            .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"));
+                    
+                    if (isAdmin) {
+                        response.sendRedirect("/admin");
+                    } else {
+                        response.sendRedirect("/home");
+                    }
+                })
                 .failureUrl("/login?error=true")
                 .permitAll()
             )

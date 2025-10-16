@@ -34,6 +34,9 @@ public class Fornecedor {
     @Column(name = "nr_telefone", unique = true)
     private String telefone;
 
+    @Column(name = "ds_endereco", length = 255)
+    private String endereco;
+
     @OneToMany(mappedBy = "fornecedor")
     private List<Ferramenta> ferramentas;
 
@@ -43,6 +46,7 @@ public class Fornecedor {
         this.cnpj = dto.cnpj();
         this.email = dto.email();
         this.telefone = dto.telefone();
+        this.endereco = dto.endereco();
     }
 
 
