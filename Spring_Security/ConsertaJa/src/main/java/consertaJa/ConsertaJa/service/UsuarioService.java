@@ -16,7 +16,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.security.SecureRandom;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -96,6 +95,17 @@ public class UsuarioService {
         usuario.setEmail(dto.getEmail());
         usuario.setNomeCompleto(dto.getNomeCompleto());
         usuario.setTelefone(dto.getTelefone());
+        usuario.setEnabled(dto.isEnabled());
+
+        // Atualizar roles se especificadas
+        if (dto.getRoles() != null && !dto.getRoles().isEmpty()) {
+            usuario.getRoles().clear();
+            for (String roleName : dto.getRoles()) {
+                Role role = roleRepository.findByNome(roleName)
+                        .orElseThrow(() -> new RuntimeException("Role não encontrada: " + roleName));
+                usuario.getRoles().add(role);
+            }
+        }
 
         Usuario usuarioSalvo = usuarioRepository.save(usuario);
         return convertToResponseDto(usuarioSalvo);
@@ -199,29 +209,6 @@ public class UsuarioService {
         usuarioRepository.save(usuario);
     }
 
-    public String resetarSenha(Long id) {
-        Usuario usuario = usuarioRepository.findById(id)
-                .orElseThrow(() -> new IdNaoEncontradoException("Usuário não encontrado"));
-        
-        String novaSenha = gerarSenhaAleatoria();
-        usuario.setPassword(passwordEncoder.encode(novaSenha));
-        usuarioRepository.save(usuario);
-        
-        return novaSenha;
-    }
-
-    private String gerarSenhaAleatoria() {
-        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        SecureRandom random = new SecureRandom();
-        StringBuilder sb = new StringBuilder();
-        
-        for (int i = 0; i < 8; i++) {
-            int randomIndex = random.nextInt(chars.length());
-            sb.append(chars.charAt(randomIndex));
-        }
-        
-        return sb.toString();
-    }
 
     private UsuarioResponseDto convertToResponseDto(Usuario usuario) {
         UsuarioResponseDto dto = new UsuarioResponseDto();

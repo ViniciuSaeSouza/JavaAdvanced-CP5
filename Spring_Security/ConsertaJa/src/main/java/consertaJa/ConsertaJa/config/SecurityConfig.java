@@ -69,7 +69,8 @@ public class SecurityConfig {
             )
             .exceptionHandling(ex -> ex
                 .accessDeniedPage("/error/403")
-            );
+            )
+            .csrf(csrf -> csrf.disable()); // Desabilita CSRF para permitir DELETE via formulário
 
         return http.build();
     }

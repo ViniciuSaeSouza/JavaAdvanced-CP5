@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meu Perfil - ConsertaJa</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --success-gradient: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
+        --warning-gradient: linear-gradient(135deg, #ffa726 0%, #ffcc02 100%);
+        --info-gradient: linear-gradient(135deg, #2196f3 0%, #64b5f6 100%);
+        --danger-gradient: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
+      }
+
+      body {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      .profile-header {
+        background: var(--primary-gradient);
+        color: white;
+        padding: 3rem 0;
+        margin-bottom: 2rem;
+        border-radius: 0 0 25px 25px;
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .profile-header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+        opacity: 0.3;
+      }
+
+      .profile-header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        position: relative;
+        z-index: 1;
+      }
+
+      .profile-header p {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        position: relative;
+        z-index: 1;
+      }
+
+      .profile-avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        color: white;
+        margin: 0 auto 1rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        position: relative;
+        z-index: 1;
+      }
+
+      .card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        overflow: hidden;
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+      }
+
+      .card-header {
+        background: var(--primary-gradient);
+        color: white;
+        border: none;
+        padding: 1.5rem;
+        font-weight: 600;
+        position: relative;
+      }
+
+      .card-header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          45deg,
+          rgba(255, 255, 255, 0.1) 0%,
+          transparent 100%
+        );
+        pointer-events: none;
+      }
+
+      .card-header h5 {
+        margin: 0;
+        position: relative;
+        z-index: 1;
+      }
+
+      .info-item {
+        padding: 0.75rem 0;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+      }
+
+      .info-item:hover {
+        background: rgba(102, 126, 234, 0.05);
+        padding-left: 1rem;
+      }
+
+      .info-item:last-child {
+        border-bottom: none;
+      }
+
+      .btn {
+        border-radius: 25px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+        border: none;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .btn::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: left 0.5s;
+      }
+
+      .btn:hover::before {
+        left: 100%;
+      }
+
+      .btn-warning {
+        background: var(--warning-gradient);
+        box-shadow: 0 4px 15px rgba(255, 167, 38, 0.4);
+      }
+
+      .btn-warning:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(255, 167, 38, 0.6);
+      }
+
+      .btn-info {
+        background: var(--info-gradient);
+        box-shadow: 0 4px 15px rgba(33, 150, 243, 0.4);
+      }
+
+      .btn-info:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(33, 150, 243, 0.6);
+      }
+
+      .btn-outline-danger {
+        border: 2px solid #ff758c;
+        color: #ff758c;
+        background: transparent;
+      }
+
+      .btn-outline-danger:hover {
+        background: var(--danger-gradient);
+        border-color: transparent;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(255, 117, 140, 0.6);
+      }
+
+      .badge {
+        border-radius: 15px;
+        padding: 0.5rem 1rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .stats-card {
+        background: var(--primary-gradient);
+        color: white;
+        border-radius: 20px;
+        padding: 2rem;
+        text-align: center;
+        box-shadow: 0 15px 35px rgba(102, 126, 234, 0.3);
+        transition: all 0.3s ease;
+      }
+
+      .stats-card:hover {
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 0 20px 40px rgba(102, 126, 234, 0.4);
+      }
+
+      .stats-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .modal-content {
+        border-radius: 20px;
+        border: none;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(10px);
+      }
+
+      .modal-header {
+        background: var(--primary-gradient);
+        color: white;
+        border-radius: 20px 20px 0 0;
+        border: none;
+      }
+
+      .form-control {
+        border-radius: 15px;
+        border: 2px solid #e9ecef;
+        transition: all 0.3s ease;
+        background: rgba(255, 255, 255, 0.9);
+      }
+
+      .form-control:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        background: white;
+      }
+
+      .alert {
+        border-radius: 15px;
+        border: none;
+        backdrop-filter: blur(10px);
+        animation: slideInDown 0.5s ease-out;
+      }
+
+      @keyframes slideInDown {
+        from {
+          opacity: 0;
+          transform: translateY(-50px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .breadcrumb {
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 1rem;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .breadcrumb-item a {
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .breadcrumb-item a:hover {
+        color: #764ba2;
+        transform: translateY(-1px);
+      }
+
+      .container {
+        animation: fadeInUp 0.8s ease-out;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div th:replace="~{layout :: header}"></div>
+
+    <!-- Profile Header -->
+    <div class="profile-header">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-md-3 text-center">
+            <div class="profile-avatar">
+              <i class="fas fa-user"></i>
+            </div>
+          </div>
+          <div class="col-md-9">
+            <h1 th:text="${usuario.nomeCompleto}">Nome do Usuário</h1>
+            <p class="mb-0">
+              <i class="fas fa-envelope me-2"></i>
+              <span th:text="${usuario.email}">email@exemplo.com</span>
+            </p>
+            <p class="mb-0">
+              <i class="fas fa-user-tag me-2"></i>
+              <span
+                th:each="role, iterStat : ${usuario.roles}"
+                th:text="${role}"
+                th:class="${role == 'ADMIN'} ? 'badge bg-danger me-1' : 'badge bg-primary me-1'"
+              ></span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <!-- Breadcrumb -->
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/home">Início</a></li>
+          <li class="breadcrumb-item active">Meu Perfil</li>
+        </ol>
+      </nav>
+
+      <!-- Mensagens -->
+      <div
+        th:if="${sucesso}"
+        class="alert alert-success alert-dismissible fade show"
+        role="alert"
+      >
+        <i class="fas fa-check-circle me-2"></i>
+        <span th:text="${sucesso}"></span>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+        ></button>
+      </div>
+
+      <div
+        th:if="${erro}"
+        class="alert alert-danger alert-dismissible fade show"
+        role="alert"
+      >
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        <span th:text="${erro}"></span>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+        ></button>
+      </div>
+
+      <div class="row">
+        <!-- Informações do Perfil -->
+        <div class="col-md-8">
+          <div class="card">
+            <div class="card-header">
+              <h5>
+                <i class="fas fa-info-circle me-2"></i>Informações Pessoais
+              </h5>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="info-item">
+                    <strong><i class="fas fa-id-card me-2"></i>ID:</strong>
+                    <span th:text="${usuario.id}" class="text-muted"></span>
+                  </div>
+                  <div class="info-item">
+                    <strong
+                      ><i class="fas fa-user me-2"></i>Nome de Usuário:</strong
+                    >
+                    <span
+                      th:text="${usuario.username}"
+                      class="text-muted"
+                    ></span>
+                  </div>
+                  <div class="info-item">
+                    <strong
+                      ><i class="fas fa-user-circle me-2"></i>Nome
+                      Completo:</strong
+                    >
+                    <span
+                      th:text="${usuario.nomeCompleto}"
+                      class="text-muted"
+                    ></span>
+                  </div>
+                  <div class="info-item">
+                    <strong><i class="fas fa-envelope me-2"></i>Email:</strong>
+                    <span th:text="${usuario.email}" class="text-muted"></span>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="info-item">
+                    <strong><i class="fas fa-phone me-2"></i>Telefone:</strong>
+                    <span
+                      th:text="${usuario.telefone ?: 'Não informado'}"
+                      class="text-muted"
+                    ></span>
+                  </div>
+                  <div class="info-item">
+                    <strong
+                      ><i class="fas fa-calendar me-2"></i>Data de
+                      Criação:</strong
+                    >
+                    <span
+                      th:text="${#temporals.format(usuario.dataCriacao, 'dd/MM/yyyy HH:mm')}"
+                      class="text-muted"
+                    ></span>
+                  </div>
+                  <div class="info-item">
+                    <strong
+                      ><i class="fas fa-toggle-on me-2"></i>Status:</strong
+                    >
+                    <span th:if="${usuario.enabled}" class="badge bg-success"
+                      >Ativo</span
+                    >
+                    <span
+                      th:unless="${usuario.enabled}"
+                      class="badge bg-secondary"
+                      >Inativo</span
+                    >
+                  </div>
+                  <div class="info-item">
+                    <strong
+                      ><i class="fas fa-shield-alt me-2"></i>Permissões:</strong
+                    >
+                    <span
+                      th:each="role, iterStat : ${usuario.roles}"
+                      th:class="${role == 'ADMIN'} ? 'badge bg-danger me-1' : 'badge bg-primary me-1'"
+                      th:text="${role}"
+                    ></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ações Rápidas -->
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-header">
+              <h5><i class="fas fa-cogs me-2"></i>Ações</h5>
+            </div>
+            <div class="card-body">
+              <!-- Editar Perfil -->
+              <a href="/editar-perfil" class="btn btn-warning w-100 mb-3">
+                <i class="fas fa-edit me-2"></i>Editar Perfil
+              </a>
+
+              <!-- Alterar Senha -->
+              <button
+                type="button"
+                class="btn btn-info w-100 mb-3"
+                data-bs-toggle="modal"
+                data-bs-target="#modalAlterarSenha"
+              >
+                <i class="fas fa-key me-2"></i>Alterar Senha
+              </button>
+
+              <!-- Logout -->
+              <form th:action="@{/logout}" method="post" class="d-grid">
+                <button type="submit" class="btn btn-outline-danger">
+                  <i class="fas fa-sign-out-alt me-2"></i>Sair
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Informações de Segurança -->
+          <div class="card mt-3">
+            <div class="card-header">
+              <h5><i class="fas fa-shield-alt me-2"></i>Segurança</h5>
+            </div>
+            <div class="card-body">
+              <p>
+                <strong>Conta Expirada:</strong>
+                <span class="badge bg-success">Não</span>
+              </p>
+              <p>
+                <strong>Conta Bloqueada:</strong>
+                <span class="badge bg-success">Não</span>
+              </p>
+              <p>
+                <strong>Credenciais Expiradas:</strong>
+                <span class="badge bg-success">Não</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal para Alterar Senha -->
+    <div class="modal fade" id="modalAlterarSenha" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Alterar Senha</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <form th:action="@{/editar-perfil}" method="post">
+            <div class="modal-body">
+              <div class="mb-3">
+                <label for="senhaAtual" class="form-label">Senha Atual</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="senhaAtual"
+                  name="senhaAtual"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="novaSenha" class="form-label">Nova Senha</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="novaSenha"
+                  name="password"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="confirmarSenha" class="form-label"
+                  >Confirmar Nova Senha</label
+                >
+                <input
+                  type="password"
+                  class="form-control"
+                  id="confirmarSenha"
+                  name="confirmPassword"
+                  required
+                />
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Cancelar
+              </button>
+              <button type="submit" class="btn btn-primary">
+                Alterar Senha
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div th:replace="~{layout :: footer}"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Validação de confirmação de senha
+      document
+        .getElementById("confirmarSenha")
+        .addEventListener("input", function () {
+          const novaSenha = document.getElementById("novaSenha").value;
+          const confirmarSenha = this.value;
+
+          if (novaSenha !== confirmarSenha) {
+            this.classList.add("is-invalid");
+          } else {
+            this.classList.remove("is-invalid");
+          }
+        });
+    </script>
+  </body>
+</html>

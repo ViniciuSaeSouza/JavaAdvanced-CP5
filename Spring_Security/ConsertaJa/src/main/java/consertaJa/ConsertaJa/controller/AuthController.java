@@ -1,6 +1,7 @@
 package consertaJa.ConsertaJa.controller;
 
 import consertaJa.ConsertaJa.dto.UsuarioRequestDto;
+import consertaJa.ConsertaJa.dto.UsuarioResponseDto;
 import consertaJa.ConsertaJa.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -55,6 +56,46 @@ public class AuthController {
         } catch (RuntimeException e) {
             result.rejectValue("username", "error.usuario", e.getMessage());
             return "auth/signup";
+        }
+    }
+
+    @GetMapping("/perfil")
+    public String perfil(Model model) {
+        UsuarioResponseDto usuario = usuarioService.obterUsuarioLogado();
+        model.addAttribute("usuario", usuario);
+        return "auth/perfil";
+    }
+
+    @GetMapping("/editar-perfil")
+    public String editarPerfilForm(Model model) {
+        UsuarioResponseDto usuario = usuarioService.obterUsuarioLogado();
+        UsuarioRequestDto usuarioDto = new UsuarioRequestDto();
+        usuarioDto.setUsername(usuario.getUsername());
+        usuarioDto.setEmail(usuario.getEmail());
+        usuarioDto.setNomeCompleto(usuario.getNomeCompleto());
+        usuarioDto.setTelefone(usuario.getTelefone());
+        
+        model.addAttribute("usuario", usuarioDto);
+        return "auth/editar-perfil";
+    }
+
+    @PostMapping("/editar-perfil")
+    public String atualizarPerfil(@Valid @ModelAttribute("usuario") UsuarioRequestDto usuarioDto,
+                                 BindingResult result,
+                                 RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) {
+            return "auth/editar-perfil";
+        }
+
+        try {
+            UsuarioResponseDto usuarioLogado = usuarioService.obterUsuarioLogado();
+            usuarioService.atualizarUsuario(usuarioLogado.getId(), usuarioDto);
+            redirectAttributes.addFlashAttribute("sucesso", "Perfil atualizado com sucesso!");
+            return "redirect:/perfil";
+        } catch (RuntimeException e) {
+            result.rejectValue("email", "error.usuario", e.getMessage());
+            result.rejectValue("username", "error.usuario", e.getMessage());
+            return "auth/editar-perfil";
         }
     }
 }

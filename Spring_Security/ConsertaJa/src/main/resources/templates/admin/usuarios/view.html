@@ -168,21 +168,6 @@
                 </button>
               </form>
 
-              <!-- Resetar Senha -->
-              <form
-                th:action="@{/admin/usuarios/{id}/reset-password(id=${usuario.id})}"
-                method="post"
-                class="mb-3"
-              >
-                <button
-                  type="submit"
-                  class="btn btn-info w-100"
-                  th:onclick="return confirm('Tem certeza que deseja resetar a senha deste usuário? Uma nova senha será gerada automaticamente.')"
-                >
-                  <i class="fas fa-key me-2"></i>Resetar Senha
-                </button>
-              </form>
-
               <!-- Editar -->
               <a
                 th:href="@{/admin/usuarios/{id}/editar(id=${usuario.id})}"

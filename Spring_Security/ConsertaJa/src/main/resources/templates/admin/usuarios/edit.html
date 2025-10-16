@@ -5,18 +5,218 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Editar Usuário - ConsertaJa</title>
     <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
       rel="stylesheet"
     />
+    <style>
+      body {
+        padding-top: 80px;
+        background-color: #f8f9fa;
+      }
+
+      .edit-header {
+        background: linear-gradient(135deg, #ffa726 0%, #fb8c00 100%);
+        color: white;
+        padding: 2.5rem 0;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .edit-header h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+      }
+
+      .edit-header p {
+        font-size: 1rem;
+        opacity: 0.95;
+      }
+
+      .card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        margin-bottom: 1.5rem;
+      }
+
+      .form-section {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 0;
+        height: 100%;
+      }
+
+      .section-header {
+        color: #667eea;
+        font-weight: 700;
+        font-size: 1.1rem;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid #667eea;
+        display: flex;
+        align-items: center;
+      }
+
+      .form-control {
+        border-radius: 6px;
+        border: 1px solid #dee2e6;
+        padding: 0.6rem 1rem;
+      }
+
+      .form-control:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+      }
+
+      .form-label {
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+      }
+
+      .form-check {
+        padding: 0.75rem;
+        background: white;
+        border: 1px solid #e9ecef;
+        border-radius: 6px;
+        margin-bottom: 0.75rem;
+      }
+
+      .form-check-input {
+        border: 2px solid #667eea;
+        width: 1.1rem;
+        height: 1.1rem;
+      }
+
+      .form-check-input:checked {
+        background-color: #667eea;
+        border-color: #667eea;
+      }
+
+      .form-check-label {
+        font-weight: 500;
+        color: #495057;
+        margin-left: 0.5rem;
+      }
+
+      .form-switch .form-check-input {
+        width: 3rem;
+        height: 1.5rem;
+      }
+
+      .btn {
+        border-radius: 6px;
+        font-weight: 500;
+        padding: 0.6rem 1.5rem;
+        transition: all 0.2s;
+      }
+
+      .btn-lg {
+        padding: 0.75rem 2rem;
+      }
+
+      .btn-success {
+        background-color: #56ab2f;
+        border: none;
+      }
+
+      .btn-success:hover {
+        background-color: #4a9428;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(86, 171, 47, 0.3);
+      }
+
+      .btn-secondary {
+        background-color: #6c757d;
+        border: none;
+      }
+
+      .btn-secondary:hover {
+        background-color: #5a6268;
+      }
+
+      .btn-light {
+        background-color: white;
+        color: #ffa726;
+        border: 2px solid white;
+      }
+
+      .btn-light:hover {
+        background-color: #f8f9fa;
+        color: #fb8c00;
+      }
+
+      .alert {
+        border-radius: 6px;
+        border: none;
+      }
+
+      .breadcrumb {
+        background-color: white;
+        border-radius: 6px;
+        padding: 1rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        margin-bottom: 1.5rem;
+      }
+
+      .breadcrumb-item a {
+        color: #667eea;
+        text-decoration: none;
+      }
+
+      .breadcrumb-item a:hover {
+        color: #5568d3;
+        text-decoration: underline;
+      }
+
+      .form-text {
+        color: #6c757d;
+        font-size: 0.85rem;
+        font-style: italic;
+        margin-top: 0.35rem;
+      }
+
+      .invalid-feedback {
+        color: #dc3545;
+        font-size: 0.875rem;
+        font-weight: 500;
+        margin-top: 0.25rem;
+      }
+
+      .is-invalid {
+        border-color: #dc3545;
+        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+      }
+    </style>
   </head>
   <body>
     <div th:replace="~{layout :: header}"></div>
 
-    <div class="container mt-4">
+    <!-- Edit Header -->
+    <div class="edit-header">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-md-8">
+            <h1><i class="fas fa-user-edit me-2"></i>Editar Usuário</h1>
+            <p class="mb-0">Modifique as informações do usuário selecionado</p>
+          </div>
+          <div class="col-md-4 text-end">
+            <a href="/admin/usuarios" class="btn btn-light">
+              <i class="fas fa-arrow-left me-2"></i>Voltar
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
       <!-- Breadcrumb -->
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
@@ -27,14 +227,6 @@
           <li class="breadcrumb-item active">Editar Usuário</li>
         </ol>
       </nav>
-
-      <!-- Header -->
-      <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2><i class="fas fa-user-edit me-2"></i>Editar Usuário</h2>
-        <a href="/admin/usuarios" class="btn btn-secondary">
-          <i class="fas fa-arrow-left me-2"></i>Voltar
-        </a>
-      </div>
 
       <!-- Mensagens de Erro -->
       <div
@@ -53,7 +245,7 @@
 
       <!-- Formulário -->
       <div class="card">
-        <div class="card-body">
+        <div class="card-body p-4">
           <form
             th:action="@{/admin/usuarios/{id}(id=${usuarioId})}"
             method="post"
@@ -64,164 +256,182 @@
             <div class="row">
               <!-- Dados Básicos -->
               <div class="col-md-6">
-                <h5 class="mb-3">
-                  <i class="fas fa-user me-2"></i>Dados Básicos
-                </h5>
+                <div class="form-section">
+                  <div class="section-header">
+                    <i class="fas fa-user me-2"></i>Dados Básicos
+                  </div>
 
-                <div class="mb-3">
-                  <label for="username" class="form-label"
-                    >Nome de Usuário *</label
-                  >
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="username"
-                    th:field="*{username}"
-                    th:classappend="${#fields.hasErrors('username')} ? 'is-invalid'"
-                    required
-                  />
-                  <div
-                    class="invalid-feedback"
-                    th:if="${#fields.hasErrors('username')}"
-                    th:errors="*{username}"
-                  ></div>
-                </div>
+                  <div class="mb-4">
+                    <label for="username" class="form-label">
+                      <i class="fas fa-at me-1"></i>Nome de Usuário *
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="username"
+                      th:field="*{username}"
+                      th:classappend="${#fields.hasErrors('username')} ? 'is-invalid'"
+                      required
+                      placeholder="Digite o nome de usuário"
+                    />
+                    <div
+                      class="invalid-feedback"
+                      th:if="${#fields.hasErrors('username')}"
+                      th:errors="*{username}"
+                    ></div>
+                  </div>
 
-                <div class="mb-3">
-                  <label for="email" class="form-label">Email *</label>
-                  <input
-                    type="email"
-                    class="form-control"
-                    id="email"
-                    th:field="*{email}"
-                    th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'"
-                    required
-                  />
-                  <div
-                    class="invalid-feedback"
-                    th:if="${#fields.hasErrors('email')}"
-                    th:errors="*{email}"
-                  ></div>
-                </div>
+                  <div class="mb-4">
+                    <label for="email" class="form-label">
+                      <i class="fas fa-envelope me-1"></i>Email *
+                    </label>
+                    <input
+                      type="email"
+                      class="form-control"
+                      id="email"
+                      th:field="*{email}"
+                      th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'"
+                      required
+                      placeholder="Digite o email"
+                    />
+                    <div
+                      class="invalid-feedback"
+                      th:if="${#fields.hasErrors('email')}"
+                      th:errors="*{email}"
+                    ></div>
+                  </div>
 
-                <div class="mb-3">
-                  <label for="nomeCompleto" class="form-label"
-                    >Nome Completo *</label
-                  >
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="nomeCompleto"
-                    th:field="*{nomeCompleto}"
-                    th:classappend="${#fields.hasErrors('nomeCompleto')} ? 'is-invalid'"
-                    required
-                  />
-                  <div
-                    class="invalid-feedback"
-                    th:if="${#fields.hasErrors('nomeCompleto')}"
-                    th:errors="*{nomeCompleto}"
-                  ></div>
-                </div>
+                  <div class="mb-4">
+                    <label for="nomeCompleto" class="form-label">
+                      <i class="fas fa-user-circle me-1"></i>Nome Completo *
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="nomeCompleto"
+                      th:field="*{nomeCompleto}"
+                      th:classappend="${#fields.hasErrors('nomeCompleto')} ? 'is-invalid'"
+                      required
+                      placeholder="Digite o nome completo"
+                    />
+                    <div
+                      class="invalid-feedback"
+                      th:if="${#fields.hasErrors('nomeCompleto')}"
+                      th:errors="*{nomeCompleto}"
+                    ></div>
+                  </div>
 
-                <div class="mb-3">
-                  <label for="telefone" class="form-label">Telefone</label>
-                  <input
-                    type="tel"
-                    class="form-control"
-                    id="telefone"
-                    th:field="*{telefone}"
-                    placeholder="(11) 99999-9999"
-                  />
+                  <div class="mb-4">
+                    <label for="telefone" class="form-label">
+                      <i class="fas fa-phone me-1"></i>Telefone
+                    </label>
+                    <input
+                      type="tel"
+                      class="form-control"
+                      id="telefone"
+                      th:field="*{telefone}"
+                      placeholder="(11) 99999-9999"
+                    />
+                  </div>
                 </div>
               </div>
 
               <!-- Segurança e Permissões -->
               <div class="col-md-6">
-                <h5 class="mb-3">
-                  <i class="fas fa-lock me-2"></i>Segurança e Permissões
-                </h5>
-
-                <div class="mb-3">
-                  <label for="password" class="form-label">Nova Senha</label>
-                  <input
-                    type="password"
-                    class="form-control"
-                    id="password"
-                    th:field="*{password}"
-                    th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'"
-                  />
-                  <div
-                    class="invalid-feedback"
-                    th:if="${#fields.hasErrors('password')}"
-                    th:errors="*{password}"
-                  ></div>
-                  <div class="form-text">
-                    Deixe em branco para manter a senha atual
+                <div class="form-section">
+                  <div class="section-header">
+                    <i class="fas fa-lock me-2"></i>Segurança e Permissões
                   </div>
-                </div>
 
-                <div class="mb-3">
-                  <label for="confirmPassword" class="form-label"
-                    >Confirmar Nova Senha</label
-                  >
-                  <input
-                    type="password"
-                    class="form-control"
-                    id="confirmPassword"
-                    th:field="*{confirmPassword}"
-                  />
-                  <div
-                    class="invalid-feedback"
-                    id="passwordMismatch"
-                    style="display: none"
-                  >
-                    As senhas não coincidem
-                  </div>
-                </div>
-
-                <div class="mb-3">
-                  <label class="form-label">Roles do Usuário</label>
-                  <div th:each="role : ${roles}" class="form-check">
+                  <div class="mb-4">
+                    <label for="password" class="form-label">
+                      <i class="fas fa-key me-1"></i>Nova Senha
+                    </label>
                     <input
-                      class="form-check-input"
-                      type="checkbox"
-                      th:id="'role_' + ${role.id}"
-                      th:field="*{roles}"
-                      th:value="${role.nome}"
-                      th:checked="${usuarioRoles != null && usuarioRoles.contains(role.nome)}"
+                      type="password"
+                      class="form-control"
+                      id="password"
+                      th:field="*{password}"
+                      th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'"
+                      placeholder="Digite uma nova senha"
                     />
-                    <label
-                      class="form-check-label"
-                      th:for="'role_' + ${role.id}"
+                    <div
+                      class="invalid-feedback"
+                      th:if="${#fields.hasErrors('password')}"
+                      th:errors="*{password}"
+                    ></div>
+                    <div class="form-text">
+                      <i class="fas fa-info-circle me-1"></i>Deixe em branco
+                      para manter a senha atual
+                    </div>
+                  </div>
+
+                  <div class="mb-4">
+                    <label for="confirmPassword" class="form-label">
+                      <i class="fas fa-key me-1"></i>Confirmar Nova Senha
+                    </label>
+                    <input
+                      type="password"
+                      class="form-control"
+                      id="confirmPassword"
+                      th:field="*{confirmPassword}"
+                      placeholder="Confirme a nova senha"
+                    />
+                    <div
+                      class="invalid-feedback"
+                      id="passwordMismatch"
+                      style="display: none"
                     >
-                      <span th:text="${role.nome}"></span>
-                      <small
-                        class="text-muted"
-                        th:text="'(' + ${role.descricao} + ')'"
-                      ></small>
-                    </label>
+                      As senhas não coincidem
+                    </div>
                   </div>
-                </div>
 
-                <div class="mb-3">
-                  <div class="form-check form-switch">
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      id="enabled"
-                      th:field="*{enabled}"
-                    />
-                    <label class="form-check-label" for="enabled">
-                      Usuário Ativo
+                  <div class="mb-4">
+                    <label class="form-label">
+                      <i class="fas fa-shield-alt me-1"></i>Roles do Usuário
                     </label>
+                    <div th:each="role : ${roles}" class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        th:id="'role_' + ${role.id}"
+                        th:field="*{roles}"
+                        th:value="${role.nome}"
+                        th:checked="${usuarioRoles != null && usuarioRoles.contains(role.nome)}"
+                      />
+                      <label
+                        class="form-check-label"
+                        th:for="'role_' + ${role.id}"
+                      >
+                        <span th:text="${role.nome}" class="fw-bold"></span>
+                        <small
+                          class="text-muted d-block"
+                          th:text="'(' + ${role.descricao} + ')'"
+                        ></small>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="mb-4">
+                    <div class="form-check form-switch p-3 bg-light rounded">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="enabled"
+                        th:field="*{enabled}"
+                      />
+                      <label class="form-check-label fw-bold" for="enabled">
+                        <i class="fas fa-toggle-on me-2"></i>Usuário Ativo
+                      </label>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
 
             <!-- Botões -->
-            <hr />
-            <div class="d-flex justify-content-end gap-2">
+            <hr class="my-4" />
+            <div class="d-flex justify-content-end gap-3">
               <a href="/admin/usuarios" class="btn btn-secondary">
                 <i class="fas fa-times me-2"></i>Cancelar
               </a>
@@ -233,6 +443,8 @@
         </div>
       </div>
     </div>
+
+    <div class="mb-5"></div>
 
     <div th:replace="~{layout :: footer}"></div>
 

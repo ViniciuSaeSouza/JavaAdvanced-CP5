@@ -122,6 +122,8 @@ public class AdminController {
         if (result.hasErrors()) {
             model.addAttribute("usuarioId", id);
             model.addAttribute("roles", roleRepository.findAll());
+            UsuarioResponseDto usuario = usuarioService.buscarPorId(id);
+            model.addAttribute("usuarioRoles", usuario.getRoles());
             return "admin/usuarios/edit";
         }
         
@@ -133,8 +135,21 @@ public class AdminController {
             model.addAttribute("erro", "Erro ao atualizar usuário: " + e.getMessage());
             model.addAttribute("usuarioId", id);
             model.addAttribute("roles", roleRepository.findAll());
+            UsuarioResponseDto usuario = usuarioService.buscarPorId(id);
+            model.addAttribute("usuarioRoles", usuario.getRoles());
             return "admin/usuarios/edit";
         }
+    }
+
+    // Método POST alternativo para atualizar (caso o filtro não funcione)
+    @PostMapping("/usuarios/{id}/update")
+    public String atualizarUsuarioPost(
+            @PathVariable Long id,
+            @Valid @ModelAttribute("usuario") UsuarioRequestDto usuarioDto,
+            BindingResult result,
+            Model model,
+            RedirectAttributes redirectAttributes) {
+        return atualizarUsuario(id, usuarioDto, result, model, redirectAttributes);
     }
 
     @DeleteMapping("/usuarios/{id}")
@@ -148,6 +163,12 @@ public class AdminController {
         return "redirect:/admin/usuarios";
     }
 
+    // Método POST alternativo para deletar (caso o filtro não funcione)
+    @PostMapping("/usuarios/{id}/delete")
+    public String deletarUsuarioPost(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        return deletarUsuario(id, redirectAttributes);
+    }
+
     @PostMapping("/usuarios/{id}/toggle-status")
     public String alternarStatusUsuario(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
@@ -159,15 +180,4 @@ public class AdminController {
         return "redirect:/admin/usuarios";
     }
 
-    @PostMapping("/usuarios/{id}/reset-password")
-    public String resetarSenha(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-        try {
-            String novaSenha = usuarioService.resetarSenha(id);
-            redirectAttributes.addFlashAttribute("sucesso", 
-                "Senha resetada com sucesso! Nova senha: " + novaSenha);
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("erro", "Erro ao resetar senha: " + e.getMessage());
-        }
-        return "redirect:/admin/usuarios/" + id;
-    }
 }
